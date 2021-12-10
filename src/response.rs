@@ -179,6 +179,31 @@ use crate::{Extensions, Result};
 pub struct Response<T> {
     head: Parts,
     body: T,
+    #[allow(dead_code)]
+    #[cfg(feature = "timing")]
+    timing: Timing
+}
+
+
+/// Stores timing information for a Response
+#[cfg(feature = "timing")]
+#[derive(Debug)]
+pub struct Timing {
+    #[allow(dead_code)]
+    tfb: Option<std::time::Instant>,
+    #[allow(dead_code)]
+    total: Option<std::time::Instant>,
+}
+
+
+#[cfg(feature = "timing")]
+impl Default for Timing {
+    fn default() -> Self {
+        Timing {
+            tfb: None,
+            total: None,
+        }
+    }
 }
 
 /// Component parts of an HTTP `Response`
@@ -252,6 +277,8 @@ impl<T> Response<T> {
         Response {
             head: Parts::new(),
             body: body,
+            #[cfg(feature = "timing")]
+            timing: Timing::default(),
         }
     }
 
@@ -275,6 +302,8 @@ impl<T> Response<T> {
         Response {
             head: parts,
             body: body,
+            #[cfg(feature = "timing")]
+            timing: Timing::default(),
         }
     }
 
@@ -477,6 +506,8 @@ impl<T> Response<T> {
         Response {
             body: f(self.body),
             head: self.head,
+            #[cfg(feature = "timing")]
+            timing: Timing::default(),
         }
     }
 }
@@ -758,6 +789,8 @@ impl Builder {
             Response {
                 head,
                 body,
+                #[cfg(feature = "timing")]
+                timing: Timing::default(),
             }
         })
     }

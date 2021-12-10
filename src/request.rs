@@ -157,6 +157,9 @@ use crate::{Extensions, Result, Uri};
 pub struct Request<T> {
     head: Parts,
     body: T,
+    #[allow(dead_code)]
+    #[cfg(feature = "timing")]
+    start: Option<std::time::Instant>,
 }
 
 /// Component parts of an HTTP `Request`
@@ -440,6 +443,8 @@ impl<T> Request<T> {
         Request {
             head: Parts::new(),
             body: body,
+            #[cfg(feature = "timing")]
+            start: None,
         }
     }
 
@@ -460,6 +465,8 @@ impl<T> Request<T> {
         Request {
             head: parts,
             body: body,
+            #[cfg(feature = "timing")]
+            start: None,
         }
     }
 
@@ -691,6 +698,8 @@ impl<T> Request<T> {
         Request {
             body: f(self.body),
             head: self.head,
+            #[cfg(feature = "timing")]
+            start: None,
         }
     }
 }
@@ -1055,6 +1064,8 @@ impl Builder {
             Request {
                 head,
                 body,
+                #[cfg(feature = "timing")]
+                start: None,
             }
         })
     }

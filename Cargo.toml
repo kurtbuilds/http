@@ -23,6 +23,9 @@ edition = "2018"
 # When updating this value, don't forget to also adjust the GitHub Actions config.
 rust-version = "1.46.0"
 
+[features]
+timing = []
+
 [dependencies]
 bytes = "1"
 fnv = "1.0.5"
